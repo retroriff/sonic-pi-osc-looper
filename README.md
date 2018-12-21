@@ -1,11 +1,10 @@
-# sonic-pi-osc-looper
-Sonic Pi OSC Looper
+# Sonic Pi OSC Looper
 
-Code to allow Sonic Pi create loops and control them using a OSC sender.
+Sonic Pi code to create live loops from a samples folder and control them using a OSC sender.
 
-This first version user 4 controllers:
+The looper currently use 4 controllers:
 
-1. Play / Stop button
+1. Button 1: Play / Stop
 2. Potentiometer 1: Sample file index
 3. Potentiometer 2: Sample starting point
 4. Potentiometer 3: Sample Length
@@ -19,4 +18,4 @@ You can use any OSC sender. These are the cues received by Sonic Pi:
 /stop, 0
 /modulate, 0, 0, 0
 ```
-Start and Modulate commands need the potentiometer values
+"/start" and "/modulate" commands require the potentiometer values

@@ -1,13 +1,11 @@
-# Sonic Pi OSC Looper
+# Sonic Pi OSC Looper: 1 Track
 # Date: 2018/12/09
 # Author: https://github.com/retroriff/
 
 # User Settings ###############################################################
-env = "mac"
-slices = 16
 
-samples = "/Users/Xavi/Music/Ableton/Samples/Post Makina/" if env=="mac"
-samples = "/home/pi/Music/Samples/Dark Punk Ass/" if env=="pi"
+slices = 16
+samples = "~/Music/Samples/Looper/"
 
 # Knobs #######################################################################
 
@@ -26,12 +24,15 @@ s.each_with_index do |item, index|
 end
 sTotal = s_d.count
 minimumLength = 1 / slices_f
-i = 0; vStart = 0, vLength = 1; vFinish = 1; vSleep = 1; t = 0; a = 0; b = 0; c = 0
+i = 0; vStart = 0, vLength = 1; vFinish = 1; vSleep = 1; t = 0; a = 0; b = 0; c = 0; playSample = 0;
 puts "Hi! We'll play with #{sTotal} samples at:"
 puts "#{samples}"
 
+# Loop Functions ###############################################################
+
+# Calculate loop
 define :calculate_loop do
-  i = (a*sTotal).floor
+  i = (a*sTotal).round
   if i > (sTotal-1) then i = (sTotal-1) end
   vStart = (b*slices).round / slices_f
   vLength = (c*slices).round / slices_f
@@ -45,8 +46,6 @@ define :calculate_loop do
   vSleep = (vFinish-vStart)*t
   puts "vSleep #{vSleep}, vFinish: #{vFinish}, vStart: #{vStart}, t: #{t}"
 end
-
-# Loop Functions ###############################################################
 
 # Start
 live_loop :startcue do
@@ -63,6 +62,7 @@ live_loop :stopcue do
   a = sync "/osc/stop"
   puts "stopping"
   set :continueplay,0
+  kill playSample
 end
 
 # Modulate
@@ -76,7 +76,7 @@ end
 live_loop :bass_line do
   if get(:continueplay)==1 then
     puts "Start: #{vStart}, Finish: #{vFinish}, Sleep: #{vSleep}, Duration: #{t}"
-    sample s, i, start: vStart, finish: vFinish
+    playSample = sample s, i, start: vStart, finish: vFinish
   end
   sleep vSleep
 end
